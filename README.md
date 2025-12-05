@@ -1,277 +1,302 @@
-# Honestly - Truth Engine & Personal Proof Vault
+# Honestly - Python Backend
 
-A production-ready blockchain-verified identity and credential verification system with zero-knowledge proofs, AI integration, and enterprise-grade security.
+Production-ready Python backend for the Honestly Truth Engine, providing secure vault operations, zero-knowledge proofs, AI integration, and enterprise-grade monitoring.
 
-## 🎯 What is Honestly?
+## 🚀 Features
 
-Honestly is a comprehensive platform for:
-- **Personal Proof Vault**: Encrypted document storage with zero-knowledge proofs
-- **App Verification**: Trust scoring and verification for applications
-- **AI Integration**: Structured APIs for programmatic access
-- **Blockchain Anchoring**: Immutable attestations via Hyperledger Fabric
-- **Privacy-Preserving Verification**: ZK-SNARK proofs for selective disclosure
+### Core Capabilities
+- **FastAPI REST API** for vault operations
+- **GraphQL API** via Ariadne
+- **Zero-Knowledge Proofs** (Groth16) for privacy-preserving verification
+- **Encrypted Document Storage** (AES-256-GCM)
+- **Neo4j Graph Database** integration for claims and provenance
 
-## 🏗️ Architecture
+### Production Features
+- **Security Middleware**: Threat detection, IP blocking, rate limiting, security headers
+- **AI Endpoints**: Structured APIs for programmatic access (`/ai/*`) with HMAC signature verification
+- **Monitoring**: Health checks, performance metrics (`/monitoring/*`), Prometheus/Grafana integration
+- **Caching**: Redis caching with in-memory fallback for <0.2s response times
+- **Performance Optimization**: Connection pooling, response time tracking, P95/P99 monitoring
+- **Prometheus Metrics**: Comprehensive metrics export at `/metrics` endpoint
+- **Grafana Dashboards**: Pre-configured dashboards for P95/P99 trends and system health
+- **Chaos Testing**: Network partition simulation with ToxiProxy for resilience testing
+- **Comprehensive Testing**: ZK attack surface tests (proof replay, timestamp manipulation, field overflow, malformed Merkle paths)
 
-The Honestly platform consists of three main components:
+### Optional Integrations
+- **Kafka** event streaming for data ingestion
+- **FAISS** vector search for semantic similarity
+- **Hyperledger Fabric** blockchain integration for attestations
 
-### 1. **Frontend Application** (`frontend-app/`)
-- React + Vite application
-- TailwindCSS for styling
-- Apollo Client for GraphQL
-- Real-time proof verification UI
-- QR code scanning and verification
-
-### 2. **GraphQL Backend** (`backend-graphql/`)
-- Node.js + Apollo Server
-- App verification and scoring engine
-- Claims, evidence, and verdict management
-- WhistlerScore calculation
-
-### 3. **Python Backend** (`backend-python/`)
-- FastAPI REST API with production-grade security
-- Neo4j graph database
-- Zero-knowledge proof generation (Groth16)
-- AI-friendly endpoints (`/ai/*`)
-- Monitoring and health checks (`/monitoring/*`)
-- Redis caching for <0.2s response times
-- Kafka event streaming (optional)
-- FAISS vector search (optional)
-- Hyperledger Fabric blockchain (optional)
-
-## 🚀 Quick Start
-
-### Minimal Stack (Recommended for Development)
-
-```bash
-# Start everything with one command
-docker compose -f docker-compose.min.yml up --build
-```
-
-This starts:
-- **API**: http://localhost:8000 (REST/GraphQL)
-- **Frontend**: http://localhost:5173
-- **Neo4j**: http://localhost:7474 (bolt://localhost:7687)
-
-### Full Stack Setup
-
-See [SETUP.md](SETUP.md) for complete setup instructions.
-
-## ✨ Production Features
-
-### 🔒 Security
-- **Security Middleware**: Automatic threat detection, IP blocking, rate limiting
-- **Security Headers**: CSP, HSTS, XSS protection, frame options
-- **Input Validation**: XSS/SQL injection detection, token validation
-- **Rate Limiting**: Per-endpoint limits (20-100 req/min)
-- **Threat Detection**: Automatic IP blocking after suspicious activity
-
-### ⚡ Performance
-- **Sub-0.2s Response Times**: Optimized endpoints with caching
-- **Redis Caching**: Distributed caching with in-memory fallback
-- **Connection Pooling**: Optimized database connections
-- **Performance Monitoring**: P95/P99 metrics, response time tracking
-
-### 🤖 AI Integration
-- **Structured Endpoints**: `/ai/verify-proof`, `/ai/verify-proofs-batch`
-- **Standardized Responses**: Consistent `{success, data, error, metadata}` format
-- **Batch Operations**: Verify up to 100 proofs in one request
-- **API Key Authentication**: Secure access control
-
-### 📊 Monitoring
-- **Health Checks**: `/health` (lightweight), `/monitoring/health` (comprehensive)
-- **Metrics**: Request counts, error rates, response times, cache stats
-- **Security Events**: Real-time threat detection and logging
-- **System Monitoring**: CPU, memory, disk usage tracking
-
-### 🔐 Zero-Knowledge Proofs
-- **Groth16 Circuits**: Age verification and document authenticity
-- **Fast Verification**: <1s verification times
-- **QR-Friendly**: Shareable proof links with QR codes
-- **Production-Ready**: Real zkSNARK circuits (Circom + snarkjs)
-
-## 📚 Documentation
-
-### Getting Started
-- [Complete Setup Guide](SETUP.md) - Step-by-step setup instructions
-- [Production Deployment](backend-python/PRODUCTION.md) - Production deployment guide
-- [Production Validation](PRODUCTION_VALIDATION.md) - Load testing, security audit, chaos engineering
-- [Architecture Overview](ARCHITECTURE.md) - System architecture details
-
-### API Documentation
-- [Vault API Reference](docs/vault-api.md) - Complete vault API documentation
-- [AI Endpoints Guide](docs/ai-endpoints.md) - AI-friendly API endpoints
-- [Monitoring Guide](docs/monitoring.md) - Health checks and metrics
-
-### Security & Performance
-- [Security Policy](SECURITY.md) - Security policy and vulnerability reporting
-- [ZK-SNARK Guide](backend-python/zkp/README.md) - Zero-knowledge proof setup
-
-### Additional Resources
-- [Vault Quick Start](docs/vault-quickstart.md) - Quick start for vault features
-- [Personal Proof Vault](docs/personal-proof-vault.md) - Vault overview
-- [Project Scope](docs/Scope.md) - Project scope and requirements
-
-## 🔑 Key Features
-
-### AppWhistler (GraphQL Backend)
-- ✅ App verification and trust scoring
-- ✅ Claims and evidence management
-- ✅ Verdict tracking and provenance
-- ✅ Multi-signal scoring engine
-- ✅ Privacy, financial, and sentiment analysis
-
-### Personal Proof Vault (Python Backend)
-- ✅ Encrypted document storage (AES-256-GCM)
-- ✅ Zero-knowledge proofs (Groth16) for selective disclosure
-- ✅ Hyperledger Fabric attestations
-- ✅ QR code generation for sharing
-- ✅ Complete audit timeline
-- ✅ Graph-based claim verification
-- ✅ AI-friendly API endpoints
-- ✅ Production-grade security middleware
-- ✅ Performance monitoring and health checks
-
-## 🛠️ Development
+## 📋 Quick Start
 
 ### Prerequisites
-- Node.js 18+
 - Python 3.11+
-- Docker & Docker Compose
 - Neo4j 5.x (or use Docker)
 - Redis (optional, for distributed caching)
 
-### Quick Development Setup
+### Installation
 
 ```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
-make install
-
-# Start minimal stack
-make up-min
-
-# Or start full stack
-make up
+pip install -r requirements.txt
 ```
 
-### Running Tests
+### Run Development Server
 
 ```bash
-# Run all tests
-make test
-
-# Individual components
-cd frontend-app && npm test
-cd backend-graphql && npm test
-cd backend-python && pytest
+# From backend-python directory
+uvicorn api.app:app --reload --port 8000
 ```
 
-## 📦 Project Structure
+Access at: http://localhost:8000
 
-```
-honestly/
-├── frontend-app/           # React frontend application
-│   ├── src/
-│   │   ├── App.jsx        # Main application component
-│   │   └── main.jsx       # Application entry point
-│   └── package.json
-│
-├── backend-graphql/        # Node.js GraphQL backend
-│   ├── src/
-│   │   ├── config/        # Configuration files
-│   │   ├── graphql/       # Schema and resolvers
-│   │   └── utils/         # Utility functions
-│   └── package.json
-│
-├── backend-python/         # Python FastAPI backend
-│   ├── api/               # FastAPI routes
-│   │   ├── middleware/    # Security, caching, monitoring
-│   │   ├── ai_routes.py   # AI endpoints
-│   │   └── vault_routes.py # Vault endpoints
-│   ├── vault/             # Vault implementation
-│   ├── zkp/               # ZK-SNARK circuits
-│   └── requirements.txt
-│
-├── docs/                   # Documentation
-├── docker-compose.min.yml  # Minimal stack (recommended)
-└── docker-compose.yml      # Full stack
-```
+## 🌐 API Endpoints
 
-## 🔐 Security
+### REST Endpoints (`/vault/*`)
 
-**Production-Ready Security Features**:
-- ✅ Automatic threat detection and IP blocking
-- ✅ Rate limiting per endpoint
-- ✅ Input validation and sanitization
-- ✅ Security headers (CSP, HSTS, etc.)
-- ✅ Audit logging for all security events
-- ✅ API key authentication for AI endpoints
-- ✅ Encrypted document storage (AES-256-GCM)
-- ✅ Zero-knowledge proofs for privacy
+#### Document Management
+- `POST /vault/upload` - Upload encrypted document
+- `GET /vault/document/{document_id}` - Retrieve document (requires auth)
+- `GET /vault/share/{token}` - Verify share link
+- `GET /vault/share/{token}/bundle` - Get verification bundle (cached, <0.2s)
+- `GET /vault/qr/{token}` - Generate QR code for share link
 
-See [SECURITY.md](SECURITY.md) for complete security policy and vulnerability reporting.
+#### Proof Operations
+- Proof generation and verification via GraphQL mutations
+
+### AI Endpoints (`/ai/*`)
+
+Structured APIs for programmatic access:
+
+- `POST /ai/verify-proof` - Verify single proof
+- `POST /ai/verify-proofs-batch` - Batch verify (up to 100 proofs)
+- `POST /ai/share-link` - Create shareable proof link
+- `GET /ai/share/{token}/info` - Get share link information (cached)
+- `GET /ai/status` - API status and capabilities
+
+**Authentication**: Include `X-API-Key` header (set `AI_API_KEY` env var)
+
+See [AI Endpoints Guide](../docs/ai-endpoints.md) for complete documentation.
+
+### Monitoring Endpoints (`/monitoring/*`)
+
+- `GET /monitoring/health` - Comprehensive health check
+- `GET /monitoring/metrics` - Performance metrics
+- `GET /monitoring/security/events` - Security event log
+- `GET /monitoring/security/threats` - Threat detection summary
+
+See [Monitoring Guide](../docs/monitoring.md) for details.
+
+### Health Checks
+
+- `GET /health` - Lightweight health check (<0.05s)
+- `GET /` - API information
+
+### GraphQL Endpoint
+
+- `POST /graphql` - GraphQL API (Ariadne)
+- Interactive docs: `GET /graphql` (if enabled)
+
+## 🔒 Security Features
+
+### Threat Detection
+- Automatic IP blocking after suspicious activity
+- XSS/SQL injection detection
+- Path traversal prevention
+- Security event logging
+
+### Rate Limiting
+- Per-endpoint rate limits (20-100 req/min)
+- Configurable via environment variables
+- Automatic throttling
+
+### Security Headers
+- CSP, HSTS, XSS protection
+- Frame options, referrer policy
+- Content type options
+
+### Input Validation
+- Token format validation
+- Document ID validation
+- String sanitization
+- Pattern matching for threats
 
 ## ⚡ Performance
 
-**Target Response Times**:
+### Response Time Targets
 - Share bundle: <0.2s (cached)
 - Proof verification: <0.2s (cached vkeys)
 - Health check: <0.05s
 - AI endpoints: <0.3s
 
-**Optimization Features**:
+### Caching Strategy
+- **Verification Keys**: Cached indefinitely (immutable)
+- **Share Bundles**: 60s TTL
+- **Document Metadata**: 5min TTL
+- **Attestations**: 10min TTL
+
+### Optimization Features
 - Redis caching with in-memory fallback
-- Connection pooling
+- Neo4j connection pooling
 - Response time monitoring
 - Cache hit rate tracking
 
-## 🤖 AI Integration
+## 🔧 Configuration
 
-The platform provides structured AI endpoints for programmatic access:
+### Environment Variables
 
-- `POST /ai/verify-proof` - Verify single proof
-- `POST /ai/verify-proofs-batch` - Batch verify (up to 100)
-- `POST /ai/share-link` - Create shareable link
-- `GET /ai/share/{token}/info` - Get share info
-- `GET /ai/status` - API status
+```bash
+# Database
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASS=test
 
-See [AI Endpoints Guide](docs/ai-endpoints.md) for complete documentation.
+# CORS & Security
+ALLOWED_ORIGINS=http://localhost:5173
+ENABLE_CORS=true
+ENABLE_HSTS=true
+ENABLE_DOCS=true  # Set to false in production
+
+# Redis (optional)
+REDIS_URL=redis://localhost:6379/0
+
+# API Keys
+AI_API_KEY=your-api-key-here
+
+# Vault Encryption
+VAULT_ENCRYPTION_KEY=<base64-encoded-256-bit-key>
+
+# Performance
+WORKERS=4  # uvicorn workers
+```
+
+### Feature Flags
+
+Disable optional services:
+```bash
+DISABLE_KAFKA=true
+DISABLE_FAISS=true
+DISABLE_FABRIC=true
+```
+
+## 📁 Project Structure
+
+```
+backend-python/
+├── api/                    # FastAPI application
+│   ├── middleware/         # Security, caching, monitoring
+│   │   ├── security.py     # Security middleware
+│   │   ├── cache.py        # Redis/in-memory caching
+│   │   └── monitoring.py   # Health checks and metrics
+│   ├── ai_routes.py        # AI endpoints
+│   ├── vault_routes.py     # Vault REST endpoints
+│   ├── vault_resolvers.py  # GraphQL resolvers
+│   └── app.py              # Main FastAPI app
+│
+├── vault/                  # Vault implementation
+│   ├── storage.py          # Encrypted storage
+│   ├── zk_proofs.py       # ZK proof service
+│   ├── share_links.py     # Share link management
+│   └── models.py          # Data models
+│
+├── zkp/                    # Zero-knowledge proofs
+│   ├── circuits/          # Circom circuits
+│   ├── artifacts/         # Compiled artifacts
+│   └── snark-runner.js    # Proof runner
+│
+├── ingestion/              # Kafka integration (optional)
+├── blockchain/            # Fabric integration (optional)
+├── vector_index/          # FAISS search (optional)
+│
+├── requirements.txt       # Python dependencies
+├── PRODUCTION.md         # Production deployment guide
+└── README.md             # This file
+```
+
+## 🔐 Zero-Knowledge Proofs
+
+The backend includes production-ready Groth16 circuits for:
+- **Age Verification**: Prove age >= threshold without revealing birthdate
+- **Document Authenticity**: Prove document hash exists in Merkle tree
+
+See [ZK-SNARK Guide](zkp/README.md) for setup and usage.
 
 ## 📊 Monitoring
 
-Real-time monitoring and health checks:
+### Health Checks
 
-- `GET /health` - Lightweight health check
-- `GET /monitoring/health` - Comprehensive health check
-- `GET /monitoring/metrics` - Performance metrics
-- `GET /monitoring/security/events` - Security event log
+```bash
+# Lightweight check
+curl http://localhost:8000/health
 
-See [Monitoring Guide](docs/monitoring.md) for details.
+# Comprehensive check
+curl http://localhost:8000/monitoring/health
+```
+
+### Metrics
+
+```bash
+# Performance metrics
+curl http://localhost:8000/monitoring/metrics
+
+# Security events
+curl http://localhost:8000/monitoring/security/events
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest
+
+# With coverage
+pytest --cov=api --cov=vault
+
+# Specific test file
+pytest tests/test_vault.py
+```
 
 ## 🚀 Production Deployment
 
 For production deployment, see:
-- [Production Deployment Guide](backend-python/PRODUCTION.md)
-- [Security Checklist](SECURITY.md#security-checklist)
-- [Performance Optimization](backend-python/PRODUCTION.md#performance-optimization)
+- [Production Deployment Guide](PRODUCTION.md)
+- [Main SETUP Guide](../SETUP.md)
 
-## 📄 License
+Key production considerations:
+- Set strong passwords
+- Configure SSL/TLS
+- Enable Redis for distributed caching
+- Set `ENABLE_DOCS=false`
+- Configure monitoring alerts
+- Set up log aggregation
 
-See [LICENSE](LICENSE) file for details.
+## 📚 Documentation
 
-## 🤝 Contributing
+- [Main README](../README.md) - Project overview
+- [Setup Guide](../SETUP.md) - Complete setup instructions
+- [Production Guide](PRODUCTION.md) - Production deployment
+- [AI Endpoints](../docs/ai-endpoints.md) - AI API documentation
+- [Monitoring Guide](../docs/monitoring.md) - Monitoring documentation
+- [ZK-SNARK Guide](zkp/README.md) - Zero-knowledge proof setup
+- [Architecture](../ARCHITECTURE.md) - System architecture
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+## 🔗 Related Components
+
+- **Frontend**: [frontend-app/](../frontend-app/)
+- **GraphQL Backend**: [backend-graphql/](../backend-graphql/)
+- **Documentation**: [docs/](../docs/)
 
 ## 📧 Support
 
 - **Issues**: [GitHub Issues](https://github.com/aresforblue-ai/honestly/issues)
+- **Security**: See [SECURITY.md](../SECURITY.md)
 - **Documentation**: See `docs/` folder
-- **Security**: See [SECURITY.md](SECURITY.md) for vulnerability reporting
 
 ---
 
-**Built with ❤️ for privacy, security, and trust.**
+**Version**: 1.0.0  
+**Last Updated**: 2024-12-19

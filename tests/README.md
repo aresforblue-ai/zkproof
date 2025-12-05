@@ -1,186 +1,234 @@
-# Validation Test Suite
+# Production Validation Test Suite
 
-Comprehensive test suite to validate production readiness: Load Testing, Security Audit, Chaos Engineering, and Documentation Review.
+Comprehensive test suite for validating production readiness, security, performance, and resilience.
 
-## 🎯 Test Goals
+## Test Categories
 
-1. **Load Testing**: Prove <200ms response time (99th percentile)
-2. **Security Audit**: Verify security hardening works
-3. **Chaos Engineering**: Test resilience when dependencies fail
-4. **Documentation Review**: Ensure docs are complete and accurate
+### 1. Load Testing (`load/`)
 
-## 🚀 Quick Start
-
-```bash
-# Run all tests
-bash tests/run-all-tests.sh
-
-# Or run individually:
-bash tests/docs/doc-validation.sh      # Documentation
-bash tests/security/security-audit.sh # Security
-bash tests/chaos/chaos-tests.sh       # Chaos engineering
-k6 run tests/load/k6-load-test.js     # Load testing
-```
-
-## 📋 Test Suites
-
-### 1. Load Testing
-
-**Tools**: k6, Locust, Artillery
+**Goal**: Prove <200ms response time under load
 
 **Tests**:
-- Ramp-up to 100 concurrent users, hold for 5 minutes
-- Spike test: 10 → 500 users instantly
-- Target: 99th percentile < 200ms
+- **Ramp Test**: Ramp up to 100 concurrent users, hold for 5 minutes
+- **Spike Test**: Jump from 10 to 500 users instantly
+
+**Requirements**:
+- k6 installed: https://k6.io/docs/getting-started/installation/
 
 **Run**:
 ```bash
-# k6
-k6 run tests/load/k6-load-test.js
-
-# Locust
-locust -f tests/load/locustfile.py --host=http://localhost:8000
-
-# Artillery
-artillery run tests/load/artillery-config.yml
+cd tests/load
+bash run_load_tests.sh
 ```
 
-### 2. Security Audit
+**Metrics**:
+- p(95) response time < 200ms
+- p(99) response time < 200ms
+- Error rate < 1%
+
+### 2. Security Audit (`security/`)
+
+**Goal**: Find vulnerabilities before attackers do
 
 **Tests**:
-- Security headers validation
-- XSS/injection prevention
-- Rate limiting
-- Error handling (no stack traces)
-- CORS validation
-- Request size limits
+- Rate limiting bypass attempts
+- SQL injection
+- XSS vulnerabilities
+- Security headers
+- Error handling (information leakage)
+- Authentication bypass
+
+**Requirements**:
+```bash
+pip install requests
+```
 
 **Run**:
 ```bash
-bash tests/security/security-audit.sh
+cd tests/security
+python3 security_audit.py http://localhost:8000
 ```
 
-**OWASP ZAP**:
-```bash
-# Start ZAP
-zap.sh -daemon -host 0.0.0.0 -port 8080
+**Output**: `security_audit_report.json`
 
-# Run scan
-bash tests/security/zap-scan.sh
-```
+### 3. Chaos Engineering (`chaos/`)
 
-### 3. Chaos Engineering
+**Goal**: Test resilience when things break
 
 **Tests**:
 - Redis failure (graceful degradation)
-- Neo4j failure (health checks)
-- Service recovery
-- High load during failures
+- Neo4j failure (readiness checks)
+- API failure (monitoring detection)
+
+**Requirements**:
+```bash
+pip install docker
+```
 
 **Run**:
 ```bash
-bash tests/chaos/chaos-tests.sh
+cd tests/chaos
+python3 chaos_tests.py http://localhost:8000
 ```
 
-### 4. Documentation Review
+**What It Tests**:
+- System degrades gracefully
+- Health checks reflect actual state
+- Automatic recovery when services return
 
-**Tests**:
-- Required files exist
-- Required sections present
-- Environment variables documented
-- Code examples valid
+### 4. Documentation Review (`documentation/`)
 
-**Run**:
+**Goal**: "New Hire" test - can someone set up from scratch?
+
+**Procedure**:
+1. Give documentation to a colleague
+2. Have them set up the system from scratch
+3. Track time, blockers, confusion
+4. Document improvements needed
+
+**Checklist**: `documentation/documentation_test.md`
+
+## Running All Tests
+
 ```bash
-bash tests/docs/doc-validation.sh
+cd tests
+bash run_all_tests.sh
 ```
 
-## 📊 Expected Results
+Or run individually:
+
+```bash
+# Load testing
+cd tests/load && bash run_load_tests.sh
+
+# Security audit
+cd tests/security && python3 security_audit.py http://localhost:8000
+
+# Chaos engineering
+cd tests/chaos && python3 chaos_tests.py http://localhost:8000
+
+# Documentation review
+# Follow checklist in tests/documentation/documentation_test.md
+```
+
+## CI/CD Integration
+
+Add to your CI/CD pipeline:
+
+```yaml
+# Load Testing (periodic, not on every commit)
+- name: Load Test
+  run: |
+    cd tests/load
+    k6 run load_test.js --out json=results.json
+
+# Security Audit (on every commit)
+- name: Security Audit
+  run: |
+    cd tests/security
+    python3 security_audit.py ${{ secrets.STAGING_URL }}
+
+# Chaos Tests (on staging deployments)
+- name: Chaos Tests
+  run: |
+    cd tests/chaos
+    python3 chaos_tests.py ${{ secrets.STAGING_URL }}
+```
+
+## Success Criteria
 
 ### Load Testing
-- ✅ p95 < 200ms
-- ✅ p99 < 200ms
-- ✅ Error rate < 1%
+- ✅ p(95) response time < 200ms
+- ✅ p(99) response time < 200ms
+- ✅ Error rate < 1% under normal load
+- ✅ Error rate < 5% during spike
 
 ### Security Audit
+- ✅ No critical vulnerabilities
+- ✅ No high-severity vulnerabilities
 - ✅ All security headers present
-- ✅ XSS/injection attempts blocked
-- ✅ Rate limiting works
-- ✅ No stack traces in errors
-- ✅ CORS properly configured
+- ✅ Rate limiting cannot be bypassed
+- ✅ Error handling doesn't leak information
 
 ### Chaos Engineering
-- ✅ Service responds without Redis (fallback)
-- ✅ Health checks reflect dependency status
-- ✅ Graceful error handling
-- ✅ Automatic recovery
+- ✅ System degrades gracefully
+- ✅ Health checks reflect actual state
+- ✅ System recovers automatically
+- ✅ Monitoring detects failures
 
 ### Documentation
-- ✅ All required files present
-- ✅ All sections documented
-- ✅ Environment variables documented
-- ✅ Code examples valid
+- ✅ System can be set up in < 30 minutes
+- ✅ All steps are clear
+- ✅ No external knowledge required
+- ✅ Troubleshooting guide resolves issues
 
-## 🔧 Prerequisites
+## Interpreting Results
 
-### Required
-- Docker (for chaos tests)
-- curl (for security tests)
-- bash (for scripts)
+### Load Test Results
 
-### Optional
-- k6 (for load testing): `brew install k6`
-- Locust (for load testing): `pip install locust`
-- Artillery (for load testing): `npm install -g artillery`
-- OWASP ZAP (for security scan): Download from [OWASP ZAP](https://www.zaproxy.org/download/)
-
-## 📝 Test Reports
-
-Test results are saved to:
-- `load-test-results.json` (k6)
-- `zap-report-*.json` (ZAP JSON report)
-- `zap-report-*.html` (ZAP HTML report)
-
-## 🎯 Success Criteria
-
-All tests must pass for production deployment:
-- ✅ Load tests: p99 < 200ms, error rate < 1%
-- ✅ Security audit: No high-risk issues, all checks pass
-- ✅ Chaos tests: Graceful degradation, health checks accurate
-- ✅ Documentation: Complete and accurate
-
-## 🚨 Troubleshooting
-
-**Service not running**:
-```bash
-docker compose -f docker-compose.min.yml up -d
+Check `results_load_test.json`:
+```json
+{
+  "metrics": {
+    "http_req_duration": {
+      "values": {
+        "p(95)": 150,  // Should be < 200
+        "p(99)": 180   // Should be < 200
+      }
+    },
+    "http_req_failed": {
+      "values": {
+        "rate": 0.001  // Should be < 0.01 (1%)
+      }
+    }
+  }
+}
 ```
 
-**k6 not found**:
-```bash
-# macOS
-brew install k6
+### Security Audit Results
 
-# Linux
-sudo gpg -k
-sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-sudo apt-get update
-sudo apt-get install k6
-```
+Check `security_audit_report.json`:
+- Review all vulnerabilities
+- Fix critical and high-severity issues
+- Document acceptable medium/low issues
 
-**ZAP not running**:
-```bash
-# Download ZAP from https://www.zaproxy.org/download/
-# Start ZAP daemon
-./zap.sh -daemon -host 0.0.0.0 -port 8080
-```
+### Chaos Test Results
 
-## 📚 Additional Resources
+Review output:
+- System should remain functional (degraded) when Redis fails
+- Readiness should reflect Neo4j failure
+- System should recover when services return
 
-- [k6 Documentation](https://k6.io/docs/)
-- [Locust Documentation](https://docs.locust.io/)
-- [Artillery Documentation](https://www.artillery.io/docs)
-- [OWASP ZAP Documentation](https://www.zaproxy.org/docs/)
+## Troubleshooting
+
+### Load Tests Failing
+
+- Check if API is running
+- Verify BASE_URL is correct
+- Check rate limiting settings
+- Review server logs
+
+### Security Audit Failing
+
+- Review vulnerabilities in report
+- Fix critical issues immediately
+- Document acceptable risks
+- Update security headers/config
+
+### Chaos Tests Failing
+
+- Verify Docker is running
+- Check container names match
+- Review health check endpoints
+- Verify monitoring is working
+
+## Continuous Improvement
+
+After running tests:
+1. Fix identified issues
+2. Update documentation
+3. Improve error handling
+4. Enhance monitoring
+5. Re-run tests to verify fixes
 
 
