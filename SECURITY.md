@@ -1,0 +1,195 @@
+# Security Policy
+
+## 🔒 Security Features
+
+Honestly implements production-grade security features to protect user data and prevent attacks.
+
+### Threat Detection & Prevention
+
+- **Automatic IP Blocking**: IPs are automatically blocked after 5 suspicious requests
+- **Rate Limiting**: Per-endpoint rate limits (20-100 requests/minute)
+- **Input Validation**: XSS, SQL injection, and path traversal detection
+- **Security Headers**: CSP, HSTS, XSS protection, frame options
+- **Request Monitoring**: All requests are logged and monitored
+
+### Security Headers
+
+The application automatically includes:
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `X-XSS-Protection: 1; mode=block`
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+- `Content-Security-Policy`: Strict CSP policy
+- `Referrer-Policy: strict-origin-when-cross-origin`
+
+### Rate Limiting
+
+Default rate limits per endpoint:
+- `/vault/share/*/bundle`: 20 requests/minute
+- `/vault/upload`: 10 requests/minute
+- `/graphql`: 60 requests/minute
+- `/ai/*`: Configurable per endpoint
+- `/zkp/artifacts/*`: 100 requests/minute
+
+### Input Validation
+
+All inputs are validated and sanitized:
+- Token format validation
+- Document ID validation
+- XSS pattern detection
+- SQL injection detection
+- Path traversal prevention
+
+## 🛡️ Supported Versions
+
+| Version | Supported          | Security Updates |
+| ------- | ------------------ | ---------------- |
+| 1.0.x   | :white_check_mark: | Active           |
+| < 1.0   | :x:                | None             |
+
+We actively support the latest version and provide security updates as needed.
+
+## 🚨 Reporting a Vulnerability
+
+We take security vulnerabilities seriously. If you discover a security vulnerability, please follow these steps:
+
+### How to Report
+
+1. **Do NOT** create a public GitHub issue
+2. Email security details to: `security@honestly.dev` (or use GitHub Security Advisories)
+3. Include:
+   - Description of the vulnerability
+   - Steps to reproduce
+   - Potential impact
+   - Suggested fix (if any)
+
+### What to Expect
+
+- **Initial Response**: Within 48 hours
+- **Status Updates**: Weekly until resolved
+- **Resolution Timeline**: Depends on severity
+  - **Critical**: 24-48 hours
+  - **High**: 1 week
+  - **Medium**: 2-4 weeks
+  - **Low**: Next release cycle
+
+### Vulnerability Disclosure Policy
+
+- We will acknowledge receipt of your report within 48 hours
+- We will investigate and confirm the vulnerability
+- We will work on a fix and keep you updated
+- We will credit you in security advisories (if desired)
+- We will coordinate public disclosure after a fix is available
+
+### What We Consider a Vulnerability
+
+- Remote code execution
+- SQL injection
+- Cross-site scripting (XSS)
+- Cross-site request forgery (CSRF)
+- Authentication/authorization bypass
+- Data exposure or leakage
+- Denial of service (DoS)
+- Cryptographic weaknesses
+
+### What We Don't Consider Vulnerabilities
+
+- Issues requiring physical access
+- Issues requiring social engineering
+- Denial of service via resource exhaustion (unless severe)
+- Missing security headers (unless causing actual vulnerability)
+- Issues in third-party dependencies (report to them directly)
+- Issues already reported and being worked on
+
+## 🔐 Security Best Practices
+
+### For Users
+
+1. **Use HTTPS**: Always use HTTPS in production
+2. **Set Strong Passwords**: Use strong, unique passwords
+3. **Rotate API Keys**: Regularly rotate API keys
+4. **Monitor Access**: Review access logs regularly
+5. **Keep Updated**: Always use the latest version
+
+### For Developers
+
+1. **Never Commit Secrets**: Use environment variables
+2. **Validate Input**: Always validate and sanitize inputs
+3. **Use HTTPS**: Never expose HTTP in production
+4. **Rate Limit**: Implement rate limiting
+5. **Log Security Events**: Log all security-relevant events
+6. **Keep Dependencies Updated**: Regularly update dependencies
+7. **Security Headers**: Always include security headers
+8. **Encrypt Sensitive Data**: Encrypt data at rest and in transit
+
+## 🔍 Security Audit Checklist
+
+Before deploying to production:
+
+- [ ] Change default passwords
+- [ ] Set `ENABLE_HSTS=true`
+- [ ] Set `ENABLE_DOCS=false` in production
+- [ ] Configure `ALLOWED_ORIGINS` correctly
+- [ ] Set `AI_API_KEY` for AI endpoints
+- [ ] Set `VAULT_ENCRYPTION_KEY` (backup securely!)
+- [ ] Enable Redis for distributed caching
+- [ ] Configure log aggregation
+- [ ] Set up monitoring alerts
+- [ ] Configure backup strategy
+- [ ] Review rate limits
+- [ ] Test disaster recovery
+- [ ] Enable HTTPS/TLS
+- [ ] Review security headers
+- [ ] Audit access logs
+- [ ] Review dependencies for vulnerabilities
+
+## 📊 Security Monitoring
+
+### Security Events
+
+All security events are logged and available via:
+- `GET /monitoring/security/events` - Recent security events
+- `GET /monitoring/security/threats` - Threat summary
+
+### Metrics Tracked
+
+- Suspicious input detection
+- Rate limit violations
+- IP blocking events
+- Failed authentication attempts
+- Security header compliance
+
+## 🔄 Security Updates
+
+### Update Process
+
+1. Security vulnerabilities are patched immediately
+2. Critical fixes are released as hotfixes
+3. Non-critical fixes are included in regular releases
+4. Security advisories are published for all vulnerabilities
+
+### Staying Updated
+
+- Subscribe to security advisories
+- Monitor GitHub releases
+- Review changelog for security fixes
+- Keep dependencies updated
+
+## 📚 Security Resources
+
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [CWE Top 25](https://cwe.mitre.org/top25/)
+- [Security Headers](https://securityheaders.com/)
+- [Mozilla Security Guidelines](https://infosec.mozilla.org/guidelines/web_security)
+
+## 📧 Contact
+
+For security-related questions or concerns:
+- **Security Email**: `security@honestly.dev`
+- **GitHub Security**: Use GitHub Security Advisories
+- **General Issues**: [GitHub Issues](https://github.com/aresforblue-ai/honestly/issues)
+
+---
+
+**Last Updated**: 2024-12-19  
+**Version**: 1.0.0
