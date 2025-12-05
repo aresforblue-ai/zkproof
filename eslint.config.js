@@ -1,6 +1,13 @@
 module.exports = [
   {
     files: ['**/*.js'],
+    ignores: [
+      '**/k6-*.js',
+      '**/k6_*.js',
+      'tests/perf/k6-load.js',
+      'tests/load/k6*.js',
+      'perf/k6*.js',
+    ],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'commonjs',
