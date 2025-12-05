@@ -1,0 +1,63 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code
+*.c text
+*.cc text
+*.cpp text
+*.cxx text
+*.h text
+*.hpp text
+*.java text
+*.js text
+*.json text
+*.jsx text
+*.py text
+*.rb text
+*.rs text
+*.ts text
+*.tsx text
+*.go text
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Documentation
+*.md text
+*.txt text
+*.adoc text
+*.textile text
+*.mustache text
+*.csv text
+*.tab text
+*.tsv text
+*.sql text
+
+# Configuration
+*.toml text
+*.yaml text
+*.yml text
+*.xml text
+*.ini text
+*.cfg text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+*.pyc binary
+*.pdf binary
