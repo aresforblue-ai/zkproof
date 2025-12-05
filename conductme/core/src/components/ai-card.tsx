@@ -60,3 +60,6 @@ export function AICard({ ai }: AICardProps) {
   );
 }
 
+
+
+

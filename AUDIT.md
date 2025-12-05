@@ -9,10 +9,77 @@ This doc packages the essentials for an external cryptographic/security audit (e
 - Data store: Neo4j (minimal mode), optional Kafka/Postgres disabled in `docker-compose.min.yml`.
 
 ## Artifact fingerprints (fill before audit)
-- ptau: `artifacts/common/pot16_final.ptau` — SHA256: `<fill>`
-- age: `age.r1cs`, `age_final.zkey`, `verification_key.json` — SHA256: `<fill each>`
-- authenticity: `authenticity.r1cs`, `authenticity_final.zkey`, `verification_key.json` — SHA256: `<fill each>`
-- Hosting: vkeys served at `/zkp/artifacts/{age,authenticity}/verification_key.json` (enable gzip/cache at proxy).
+
+### Computing SHA256 Checksums
+
+**On Linux/macOS**:
+```bash
+cd backend-python/zkp
+sha256sum artifacts/common/pot16_final.ptau
+sha256sum artifacts/age/age.r1cs
+sha256sum artifacts/age/age_final.zkey
+sha256sum artifacts/age/verification_key.json
+sha256sum artifacts/authenticity/authenticity.r1cs
+sha256sum artifacts/authenticity/authenticity_final.zkey
+sha256sum artifacts/authenticity/verification_key.json
+```
+
+**On Windows (PowerShell)**:
+```powershell
+cd backend-python\zkp
+Get-FileHash artifacts\common\pot16_final.ptau -Algorithm SHA256
+Get-FileHash artifacts\age\age.r1cs -Algorithm SHA256
+Get-FileHash artifacts\age\age_final.zkey -Algorithm SHA256
+Get-FileHash artifacts\age\verification_key.json -Algorithm SHA256
+Get-FileHash artifacts\authenticity\authenticity.r1cs -Algorithm SHA256
+Get-FileHash artifacts\authenticity\authenticity_final.zkey -Algorithm SHA256
+Get-FileHash artifacts\authenticity\verification_key.json -Algorithm SHA256
+```
+
+**Using Node.js**:
+```bash
+cd backend-python/zkp
+node -e "const fs = require('fs'); const crypto = require('crypto'); const files = ['artifacts/common/pot16_final.ptau', 'artifacts/age/age.r1cs', 'artifacts/age/age_final.zkey', 'artifacts/age/verification_key.json', 'artifacts/authenticity/authenticity.r1cs', 'artifacts/authenticity/authenticity_final.zkey', 'artifacts/authenticity/verification_key.json']; files.forEach(f => { try { const data = fs.readFileSync(f); const hash = crypto.createHash('sha256').update(data).digest('hex'); console.log(`${f}: ${hash}`); } catch(e) { console.log(`${f}: FILE_NOT_FOUND`); } });"
+```
+
+### Artifact Checksums
+
+**⚠️ IMPORTANT**: After rebuilding circuits (see `backend-python/zkp/REBUILD_CIRCUITS.md`), compute and fill in these checksums.
+
+**Powers of Tau**:
+- `artifacts/common/pot16_final.ptau` — SHA256: `<fill after build>`
+  - **Expected**: Should match Hermez Powers of Tau ceremony output
+  - **Verify**: `curl -L https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_16.ptau | sha256sum`
+
+**Age Circuit**:
+- `artifacts/age/age.r1cs` — SHA256: `<fill after build>`
+- `artifacts/age/age_final.zkey` — SHA256: `<fill after build>`
+- `artifacts/age/verification_key.json` — SHA256: `<fill after build>`
+- **Public Signals Order**: `["minAgeOut", "referenceTsOut", "documentHashOut", "commitment", "nullifier"]`
+
+**Authenticity Circuit**:
+- `artifacts/authenticity/authenticity.r1cs` — SHA256: `<fill after build>`
+- `artifacts/authenticity/authenticity_final.zkey` — SHA256: `<fill after build>`
+- `artifacts/authenticity/verification_key.json` — SHA256: `<fill after build>`
+- **Public Signals Order**: `["rootOut", "leafOut", "epochOut", "nullifier"]`
+
+**Hosting**: vkeys served at `/zkp/artifacts/{age,authenticity}/verification_key.json` (enable gzip/cache at proxy).
+
+### Sample Proof Checksums
+
+After generating sample proofs (see below), compute checksums:
+
+```bash
+# Age proof
+sha256sum artifacts/age/age-proof.sample.json
+# Expected: <fill after generation>
+
+# Authenticity proof
+sha256sum artifacts/authenticity/authenticity-proof.sample.json
+# Expected: <fill after generation>
+```
+
+**Note**: Replace `<fill after build>` and `<fill after generation>` with actual checksums before audit submission.
 
 ## Reproducible ZK build
 From `backend-python/zkp`:
@@ -41,7 +108,19 @@ node snark-runner.js prove authenticity --input-file ./samples/authenticity-inpu
 node snark-runner.js verify authenticity --proof-file ./samples/authenticity-proof.sample.json
 ```
 
-Replace placeholder vkeys/proofs with generated ones before audit. Include checksums of `ptau`, `r1cs`, `zkey`, `verification_key.json`.
+Replace placeholder vkeys/proofs with generated ones before audit. Include checksums of `ptau`, `r1cs`, `zkey`, `verification_key.json`, and sample proofs.
+
+### Sample Proof Checksums (fill after generation)
+
+After running the proof generation commands above:
+
+**Age Proof**:
+- `samples/age-proof.sample.json` — SHA256: `<fill after generation>`
+- `samples/age-input.sample.json` — SHA256: `<fill after generation>`
+
+**Authenticity Proof**:
+- `samples/authenticity-proof.sample.json` — SHA256: `<fill after generation>`
+- `samples/authenticity-input.sample.json` — SHA256: `<fill after generation>`
 
 Public signal order:
 - age: `[minAgeOut, referenceTsOut, documentHashOut, commitment]`

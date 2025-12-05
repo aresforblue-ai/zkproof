@@ -42,12 +42,45 @@ All inputs are validated and sanitized:
 
 ## 🛡️ Supported Versions
 
-| Version | Supported          | Security Updates |
-| ------- | ------------------ | ---------------- |
-| 1.0.x   | :white_check_mark: | Active           |
-| < 1.0   | :x:                | None             |
+| Version | Supported          | Security Updates | End of Life |
+| ------- | ------------------ | ---------------- | ----------- |
+| 1.0.x   | :white_check_mark: | Active           | TBD         |
+| < 1.0   | :x:                | None             | N/A         |
+
+**Current Version**: 1.0.0  
+**Last Security Update**: 2024-12-19  
+**Next Security Review**: 2025-01-19
 
 We actively support the latest version and provide security updates as needed.
+
+### Dependency Versions
+
+**Backend (Python)**:
+- FastAPI: 0.115.5
+- Uvicorn: 0.32.0
+- Ariadne: 0.23.0
+- Py2neo: 2021.2.4
+- Cryptography: ≥41.0.0
+- PyJWT: ≥2.8.0
+- Pydantic: ≥2.0.0
+- Redis: ≥5.0.0
+
+**ZK-SNARK Stack**:
+- Circom: 2.1.6
+- snarkjs: 0.7.3
+- circomlibjs: 0.0.8
+- Powers of Tau: 16 (final)
+
+**Frontend**:
+- React: 18.2.0
+- Vite: 5.0.8
+- snarkjs: 0.7.3
+
+**Infrastructure**:
+- Neo4j: 5.x
+- Docker: Latest
+- Prometheus: Latest
+- Grafana: Latest
 
 ## 🚨 Reporting a Vulnerability
 
@@ -192,4 +225,6 @@ For security-related questions or concerns:
 ---
 
 **Last Updated**: 2024-12-19  
-**Version**: 1.0.0
+**Version**: 1.0.0  
+**Security Contact**: security@honestly.dev  
+**CVE Database**: https://github.com/aresforblue-ai/honestly/security/advisories
